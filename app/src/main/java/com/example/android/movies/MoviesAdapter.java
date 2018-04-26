@@ -16,12 +16,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     private static final String CLASS_NAME = MoviesAdapter.class.getSimpleName();
     final private MovieItemClickListener mOnClickListener;
-    private List<String> mMoviesList;
+    private List<Movie> mMoviesList;
 
-    public MoviesAdapter(List<String> moviesList, MovieItemClickListener listener) {
+    public MoviesAdapter(List<Movie> moviesList, MovieItemClickListener listener) {
         mOnClickListener = listener;
         mMoviesList = moviesList;
     }
+
 
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,7 +51,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     }
 
     public interface MovieItemClickListener {
-        void onMovieItemClick();
+        void onMovieItemClick(Integer movieId);
     }
 
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -60,20 +61,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         public MoviesViewHolder(View itemView) {
             super(itemView);
-
             movieItemImage = (ImageView) itemView.findViewById(R.id.iv_movie_item);
             movieItemText = (TextView) itemView.findViewById(R.id.tv_movie_item);
             itemView.setOnClickListener(this);
         }
 
         void bind(int i) {
-            Picasso.with(itemView.getContext()).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(movieItemImage);
-            movieItemText.setText(mMoviesList.get(i));
+            Picasso.with(itemView.getContext()).load(mMoviesList.get(i).getPostFullPath()).into(movieItemImage);
+            movieItemText.setText(mMoviesList.get(i).getTitle());
         }
 
         @Override
         public void onClick(View view) {
-            mOnClickListener.onMovieItemClick();
+            mOnClickListener.onMovieItemClick(mMoviesList.get(this.getLayoutPosition()).getmMovieId());
         }
     }
 

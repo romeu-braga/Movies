@@ -1,5 +1,6 @@
 package com.example.android.movies;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,10 @@ import android.widget.Toast;
 
 import com.example.android.movies.utilities.NetworkUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MovieItemClickListener{
 
     private static String CLASS_NAME = MainActivity.class.getSimpleName();
+    public static String PUT_EXTRA_MOVIE_ID = "MOVIE_ID";
     private RecyclerView mMoviesRecyclerView;
     private MoviesAdapter mAdapter;
     private Toast mToast;
@@ -29,7 +35,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
-    private List<String> mListResults;
+    private List<Movie> mListResults;
+    private Intent mDetailIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesRecyclerView = (RecyclerView)findViewById(R.id.rv_movies);
         mErrorMessageDisplay = (TextView)findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = (ProgressBar)findViewById(R.id.pb_loading_indicator);
-        mListResults = new ArrayList<String>();
+        mListResults = new ArrayList<Movie>();
 
         GridLayoutManager gridLayoutManager = null;
 
@@ -63,13 +70,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     @Override
-    public void onMovieItemClick() {
-            if(mToast != null) {
-                mToast.cancel();
-            }
-
-            mToast = Toast.makeText(this, "Test", Toast.LENGTH_LONG);
-            mToast.show();
+    public void onMovieItemClick(Integer movieId) {
+        mDetailIntent = new Intent(this, MovieDetail.class);
+        mDetailIntent.putExtra(PUT_EXTRA_MOVIE_ID, movieId);
+        startActivity(mDetailIntent);
     }
 
     private void makeMovieDbRequest() {
@@ -113,9 +117,26 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         protected void onPostExecute(String result) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if(result != null && !result.equals("")) {
-                mListResults.add(result);
+                try {
+
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONArray moviesResults = jsonObject.getJSONArray("results");
+
+                    for(int i = 0; i < moviesResults.length(); i++) {
+                        mListResults.add(new Movie(
+                                moviesResults.getJSONObject(i).getString("title"),
+                                moviesResults.getJSONObject(i).getString("poster_path"),
+                                moviesResults.getJSONObject(i).getInt(  "id")
+                        ));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 mAdapter.notifyDataSetChanged();
                 showMovieData();
+
             } else {
                 showErrorMessage();
             }
