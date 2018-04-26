@@ -6,18 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
     private static final String CLASS_NAME = MoviesAdapter.class.getSimpleName();
     final private MovieItemClickListener mOnClickListener;
-    private int mNumberItems;
+    private List<String> mMoviesList;
 
-    public MoviesAdapter(int numberOfItems, MovieItemClickListener listener) {
-        mNumberItems = numberOfItems;
+    public MoviesAdapter(List<String> moviesList, MovieItemClickListener listener) {
         mOnClickListener = listener;
+        mMoviesList = moviesList;
     }
 
     @Override
@@ -35,12 +38,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     @Override
     public void onBindViewHolder(MoviesViewHolder holder, int position) {
-        holder.bind();
+            holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        return mNumberItems;
+        if(mMoviesList == null) {
+            return 0;
+        }
+        return mMoviesList.size();
     }
 
     public interface MovieItemClickListener {
@@ -50,15 +56,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView movieItemImage;
+        TextView movieItemText;
 
         public MoviesViewHolder(View itemView) {
             super(itemView);
+
             movieItemImage = (ImageView) itemView.findViewById(R.id.iv_movie_item);
+            movieItemText = (TextView) itemView.findViewById(R.id.tv_movie_item);
             itemView.setOnClickListener(this);
         }
 
-        void bind() {
+        void bind(int i) {
             Picasso.with(itemView.getContext()).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(movieItemImage);
+            movieItemText.setText(mMoviesList.get(i));
         }
 
         @Override
