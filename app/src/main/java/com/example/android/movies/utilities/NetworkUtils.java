@@ -13,6 +13,11 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class NetworkUtils {
+    
+    /**
+    *Please set the KEY_VALUE
+    */
+    private static String KEY_VALUE = "";
 
     private static String BASE_URL = "https://api.themoviedb.org/3";
     private static String PATH_DISCOVER = "discover";
@@ -30,11 +35,6 @@ public class NetworkUtils {
 
     private static String KEY_PARAMETER = "api_key";
     
-    /**
-    *Please set the KEY_VALUE
-    */
-    private static String KEY_VALUE = "";
-
     public static String FILTER_POPULARITY = "popularity";
     public static String FILTER_HIGHEST_RATED = "highest_rated";
 
