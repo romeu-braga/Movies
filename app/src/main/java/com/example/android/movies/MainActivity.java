@@ -136,9 +136,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             case R.id.option_top_rated:
                 setTitle(R.string.title_top_rated);
                 mListResults.clear();
-                mDefaultFilter = NetworkUtils.FILTER_HIGHEST_RATED;
+                mDefaultFilter = NetworkUtils.FILTER_TOP_RATED;
                 mCurrentPage = 1;
-                makeMovieDbRequest(NetworkUtils.buildUrl(NetworkUtils.FILTER_HIGHEST_RATED, mCurrentPage));
+                makeMovieDbRequest(NetworkUtils.buildUrl(NetworkUtils.FILTER_TOP_RATED, mCurrentPage));
                 scrollListener.resetState();
                 return true;
             default:

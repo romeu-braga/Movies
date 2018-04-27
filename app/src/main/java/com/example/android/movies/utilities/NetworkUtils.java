@@ -23,20 +23,10 @@ public class NetworkUtils {
     private static String PATH_DISCOVER = "discover";
     private static String PATH_MOVIE = "movie";
 
-    private static String SORT_PARAMETER = "sort_by";
-    private static String SORT_POPULARITY_VALUE = "popularity.desc";
-
-    private static String CERTIFICATION_COUNTRY_PARAMETER = "certification_country";
-    private static String CERTIFICATION_COUNTRY_VALUE = "US";
-    private static String CERTIFICATION_PARAMETER = "certification";
-    private static String CERTIFICATION_VALUE = "R";
-
-    private static String SORT_HIGHEST_RATED_VALUE = "vote_average.desc";
-
     private static String KEY_PARAMETER = "api_key";
     
-    public static String FILTER_POPULARITY = "popularity";
-    public static String FILTER_HIGHEST_RATED = "highest_rated";
+    public static String FILTER_POPULARITY = "popular";
+    public static String FILTER_TOP_RATED = "top_rated";
 
     public static String PAGE_PARAMETER = "page";
 
@@ -47,17 +37,15 @@ public class NetworkUtils {
             builtUri = Uri.parse(BASE_URL).buildUpon()
                     .appendPath(PATH_DISCOVER)
                     .appendPath(PATH_MOVIE)
-                    .appendQueryParameter(SORT_PARAMETER, SORT_POPULARITY_VALUE)
+                    .appendPath(FILTER_POPULARITY)
                     .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
                     .appendQueryParameter(KEY_PARAMETER, KEY_VALUE)
                     .build();
-        } else if (resultsType.equals(FILTER_HIGHEST_RATED)) {
+        } else if (resultsType.equals(FILTER_TOP_RATED)) {
             builtUri = Uri.parse(BASE_URL).buildUpon()
                     .appendPath(PATH_DISCOVER)
                     .appendPath(PATH_MOVIE)
-                    .appendQueryParameter(CERTIFICATION_COUNTRY_PARAMETER, CERTIFICATION_COUNTRY_VALUE)
-                    .appendQueryParameter(CERTIFICATION_PARAMETER, CERTIFICATION_VALUE)
-                    .appendQueryParameter(SORT_PARAMETER, SORT_HIGHEST_RATED_VALUE)
+                    .appendPath(FILTER_TOP_RATED)
                     .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
                     .appendQueryParameter(KEY_PARAMETER, KEY_VALUE)
                     .build();
