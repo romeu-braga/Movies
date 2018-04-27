@@ -62,6 +62,25 @@ public class NetworkUtils {
         return url;
     }
 
+    public static URL buildUrl(Integer movieId) {
+        Uri builtUri = null;
+
+        builtUri = Uri.parse(BASE_URL).buildUpon()
+                .appendPath(PATH_MOVIE)
+                .appendPath(movieId.toString())
+                .appendQueryParameter(KEY_PARAMETER, KEY_VALUE)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {

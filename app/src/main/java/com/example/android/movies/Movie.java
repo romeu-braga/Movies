@@ -30,4 +30,8 @@ public class Movie {
     public String getPostFullPath() {
         return BASE_POST_IMAGE_PATH + POST_IMAGE_SIZE + getPosterPath();
     }
+
+    public static String getPostFullPath(String partialPath) {
+        return BASE_POST_IMAGE_PATH + POST_IMAGE_SIZE + partialPath;
+    }
 }
