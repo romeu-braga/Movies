@@ -1,4 +1,3 @@
-Please, go to the Class NetworkUtils and set the appropriate value for the key to the API movie db. Without this key, the app don't work properly.
-https://github.com/romeu-braga/Movies/tree/master/app/src/main/java/com/example/android/movies/utilities
+Please, go to the Graddle(app) and set the appropriate value for the key to the API movie db. Without this key, the app don't work properly.
 https://www.themoviedb.org/documentation/api
 
