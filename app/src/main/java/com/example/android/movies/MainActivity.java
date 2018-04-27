@@ -6,12 +6,13 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.movies.utilities.NetworkUtils;
 
@@ -30,7 +31,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     public static String PUT_EXTRA_MOVIE_ID = "MOVIE_ID";
     private RecyclerView mMoviesRecyclerView;
     private MoviesAdapter mAdapter;
-    private Toast mToast;
+    private String mDefaultFilter = NetworkUtils.FILTER_POPULARITY;
+    private Integer mCurrentPage = 1;
+
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setTitle(R.string.title_popularity);
 
         mMoviesRecyclerView = (RecyclerView)findViewById(R.id.rv_movies);
         mErrorMessageDisplay = (TextView)findViewById(R.id.tv_error_message_display);
@@ -57,16 +63,31 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             gridLayoutManager = new GridLayoutManager(this, 3);
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mMoviesRecyclerView.setLayoutManager(gridLayoutManager);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                mCurrentPage++;
+                makeMovieDbRequest(NetworkUtils.buildUrl(mDefaultFilter, mCurrentPage));
+            }
+        };
+
+        mMoviesRecyclerView.addOnScrollListener(scrollListener);
+
         mMoviesRecyclerView.setHasFixedSize(true);
-
-
 
         mAdapter = new MoviesAdapter(mListResults, this);
         mMoviesRecyclerView.setAdapter(mAdapter);
 
-        makeMovieDbRequest();
+        makeMovieDbRequest(NetworkUtils.buildUrl(NetworkUtils.FILTER_POPULARITY, mCurrentPage));
+
+        mErrorMessageDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeMovieDbRequest(NetworkUtils.buildUrl(mDefaultFilter, mCurrentPage));
+            }
+        });
     }
 
     @Override
@@ -76,9 +97,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(mDetailIntent);
     }
 
-    private void makeMovieDbRequest() {
-        URL movieDbUrlRequest = NetworkUtils.buildUrl(NetworkUtils.FILTER_POPULARITY);
-        new MovieDbAsyncTask().execute(movieDbUrlRequest);
+    private void makeMovieDbRequest(URL searchURL) {
+        if(NetworkUtils.isOnline(this)) {
+            new MovieDbAsyncTask().execute(searchURL);
+        } else {
+            showErrorMessage();
+        }
     }
 
     private void showMovieData() {
@@ -89,6 +113,38 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private void showErrorMessage() {
         mMoviesRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_popularity:
+                setTitle(R.string.title_popularity);
+                mListResults.clear();
+                mDefaultFilter = NetworkUtils.FILTER_POPULARITY;
+                mCurrentPage = 1;
+                makeMovieDbRequest(NetworkUtils.buildUrl(NetworkUtils.FILTER_POPULARITY, mCurrentPage));
+                scrollListener.resetState();
+                return true;
+            case R.id.option_top_rated:
+                setTitle(R.string.title_top_rated);
+                mListResults.clear();
+                mDefaultFilter = NetworkUtils.FILTER_HIGHEST_RATED;
+                mCurrentPage = 1;
+                makeMovieDbRequest(NetworkUtils.buildUrl(NetworkUtils.FILTER_HIGHEST_RATED, mCurrentPage));
+                scrollListener.resetState();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     public class MovieDbAsyncTask extends AsyncTask<URL, Void, String> {

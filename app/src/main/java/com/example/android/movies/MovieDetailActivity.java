@@ -11,10 +11,8 @@ import android.widget.TextView;
 import com.example.android.movies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,11 +52,20 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         makeMovieDetailRequest(mMovieId);
+
+        mErrorMessageDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeMovieDetailRequest(mMovieId);
+            }
+        });
     }
 
     private void makeMovieDetailRequest(Integer movieId) {
-        URL movieDetailUrlRequest = NetworkUtils.buildUrl(movieId);
-        new MovieDetailAsyncTask().execute(movieDetailUrlRequest);
+        if(NetworkUtils.isOnline(this)) {
+            URL movieDetailUrlRequest = NetworkUtils.buildUrl(movieId);
+            new MovieDetailAsyncTask().execute(movieDetailUrlRequest);
+        }
     }
 
     private void showMovieData() {
@@ -116,11 +123,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                     String voteAverage = jsonObject.getString("vote_average");
                     String overview = jsonObject.getString("overview");
 
+                    setTitle(title);
                     mMovieTitleTextView.setText(title);
                     Picasso.with(MovieDetailActivity.this).load(Movie.getPostFullPath(postPath)).into(mMovieDetailPost);
                     mMovieReleaseDateTextView.setText(releaseDate);
                     mMovieVoteAverageTextView.setText(voteAverage);
                     mMovieOverviewTextView.setText(overview);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();

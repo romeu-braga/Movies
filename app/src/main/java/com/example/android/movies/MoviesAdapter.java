@@ -23,7 +23,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         mMoviesList = moviesList;
     }
 
-
     @Override
     public MoviesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -68,7 +67,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         void bind(int i) {
             Picasso.with(itemView.getContext()).load(mMoviesList.get(i).getPostFullPath()).into(movieItemImage);
-            movieItemText.setText(mMoviesList.get(i).getTitle());
+            String title = mMoviesList.get(i).getTitle();
+            movieItemText.setText(title);
         }
 
         @Override
@@ -76,7 +76,5 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             mOnClickListener.onMovieItemClick(mMoviesList.get(this.getLayoutPosition()).getmMovieId());
         }
     }
-
-
 
 }

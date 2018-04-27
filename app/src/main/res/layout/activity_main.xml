@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.movies.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
@@ -18,13 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:visibility="invisible" />
-
-    <ProgressBar
-        android:id="@+id/pb_loading_indicator"
-        android:layout_height="42dp"
-        android:layout_width="42dp"
+        android:visibility="invisible"
         android:layout_gravity="center"
-        android:visibility="invisible" />
+        android:text="@string/no_connection"
+        android:textAlignment="center"/>
 
 </FrameLayout>

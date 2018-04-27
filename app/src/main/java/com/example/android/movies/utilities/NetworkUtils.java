@@ -1,5 +1,8 @@
 package com.example.android.movies.utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import java.io.IOException;
@@ -31,7 +34,9 @@ public class NetworkUtils {
     public static String FILTER_POPULARITY = "popularity";
     public static String FILTER_HIGHEST_RATED = "highest_rated";
 
-    public static URL buildUrl(String resultsType) {
+    public static String PAGE_PARAMETER = "page";
+
+    public static URL buildUrl(String resultsType, Integer pageNumber) {
         Uri builtUri = null;
 
         if (resultsType.equals(FILTER_POPULARITY)) {
@@ -39,6 +44,7 @@ public class NetworkUtils {
                     .appendPath(PATH_DISCOVER)
                     .appendPath(PATH_MOVIE)
                     .appendQueryParameter(SORT_PARAMETER, SORT_POPULARITY_VALUE)
+                    .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
                     .appendQueryParameter(KEY_PARAMETER, KEY_VALUE)
                     .build();
         } else if (resultsType.equals(FILTER_HIGHEST_RATED)) {
@@ -48,6 +54,7 @@ public class NetworkUtils {
                     .appendQueryParameter(CERTIFICATION_COUNTRY_PARAMETER, CERTIFICATION_COUNTRY_VALUE)
                     .appendQueryParameter(CERTIFICATION_PARAMETER, CERTIFICATION_VALUE)
                     .appendQueryParameter(SORT_PARAMETER, SORT_HIGHEST_RATED_VALUE)
+                    .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
                     .appendQueryParameter(KEY_PARAMETER, KEY_VALUE)
                     .build();
         }
@@ -99,6 +106,13 @@ public class NetworkUtils {
             urlConnection.disconnect();
         }
 
+    }
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }
