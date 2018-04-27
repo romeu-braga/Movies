@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import com.example.android.movies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -17,10 +19,9 @@ public class NetworkUtils {
     /**
     *Please set the KEY_VALUE
     */
-    private static String KEY_VALUE = "";
+    private static String KEY_VALUE = BuildConfig.api_key;
 
     private static String BASE_URL = "https://api.themoviedb.org/3";
-    private static String PATH_DISCOVER = "discover";
     private static String PATH_MOVIE = "movie";
 
     private static String KEY_PARAMETER = "api_key";
@@ -35,7 +36,6 @@ public class NetworkUtils {
 
         if (resultsType.equals(FILTER_POPULARITY)) {
             builtUri = Uri.parse(BASE_URL).buildUpon()
-                    .appendPath(PATH_DISCOVER)
                     .appendPath(PATH_MOVIE)
                     .appendPath(FILTER_POPULARITY)
                     .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
@@ -43,7 +43,6 @@ public class NetworkUtils {
                     .build();
         } else if (resultsType.equals(FILTER_TOP_RATED)) {
             builtUri = Uri.parse(BASE_URL).buildUpon()
-                    .appendPath(PATH_DISCOVER)
                     .appendPath(PATH_MOVIE)
                     .appendPath(FILTER_TOP_RATED)
                     .appendQueryParameter(PAGE_PARAMETER, pageNumber.toString())
