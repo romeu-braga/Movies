@@ -1,6 +1,9 @@
 package com.example.android.movies;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable {
 
     private String mTitle;
     private String mPosterPath;
@@ -31,7 +34,38 @@ public class Movie {
         return BASE_POST_IMAGE_PATH + POST_IMAGE_SIZE + getPosterPath();
     }
 
-    public static String getPostFullPath(String partialPath) {
-        return BASE_POST_IMAGE_PATH + POST_IMAGE_SIZE + partialPath;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeStringArray(new String[] {
+                this.mTitle,this.mPosterPath,this.mMovieId.toString()
+        });
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+
+    };
+
+    private Movie (Parcel in) {
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+
+        this.mTitle = data[0];
+        this.mPosterPath = data[1];
+        this.mMovieId = Integer.parseInt(data[2]);
+
     }
 }

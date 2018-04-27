@@ -19,7 +19,7 @@ import java.net.URL;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private Integer mMovieId;
+    private Movie mMovie;
 
     private TextView mMovieTitleTextView;
     private ImageView mMovieDetailPost;
@@ -46,17 +46,17 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            mMovieId = null;
+            mMovie = null;
         } else {
-            mMovieId = extras.getInt(MainActivity.PUT_EXTRA_MOVIE_ID);
+            mMovie = (Movie) extras.getParcelable(MainActivity.PUT_EXTRA_MOVIE_ID);
         }
 
-        makeMovieDetailRequest(mMovieId);
+        makeMovieDetailRequest(mMovie.getmMovieId());
 
         mErrorMessageDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeMovieDetailRequest(mMovieId);
+                makeMovieDetailRequest(mMovie.getmMovieId());
             }
         });
     }
@@ -125,7 +125,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                     setTitle(title);
                     mMovieTitleTextView.setText(title);
-                    Picasso.with(MovieDetailActivity.this).load(Movie.getPostFullPath(postPath)).into(mMovieDetailPost);
+                    Picasso.with(MovieDetailActivity.this).load(mMovie.getPostFullPath()).into(mMovieDetailPost);
                     mMovieReleaseDateTextView.setText(releaseDate);
                     mMovieVoteAverageTextView.setText(voteAverage);
                     mMovieOverviewTextView.setText(overview);

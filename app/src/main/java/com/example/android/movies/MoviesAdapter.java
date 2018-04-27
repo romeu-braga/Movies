@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     }
 
     public interface MovieItemClickListener {
-        void onMovieItemClick(Integer movieId);
+        void onMovieItemClick(Movie movie);
     }
 
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -73,7 +73,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
         @Override
         public void onClick(View view) {
-            mOnClickListener.onMovieItemClick(mMoviesList.get(this.getLayoutPosition()).getmMovieId());
+            mOnClickListener.onMovieItemClick(mMoviesList.get(this.getLayoutPosition()));
         }
     }
 
