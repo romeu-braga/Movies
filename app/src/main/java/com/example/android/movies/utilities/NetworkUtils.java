@@ -29,7 +29,11 @@ public class NetworkUtils {
     private static String SORT_HIGHEST_RATED_VALUE = "vote_average.desc";
 
     private static String KEY_PARAMETER = "api_key";
-    private static String KEY_VALUE = "7ecc0f8c451803bfb36358ee6f18e199";
+    
+    /**
+    *Please set the KEY_VALUE
+    */
+    private static String KEY_VALUE = "";
 
     public static String FILTER_POPULARITY = "popularity";
     public static String FILTER_HIGHEST_RATED = "highest_rated";
